@@ -1,22 +1,24 @@
 # claude-no-bash-detour
 
-A set of Claude Code `PreToolUse` hooks that deny specific Bash command
-patterns which duplicate a built-in Claude Code tool, and tell Claude to use
-that tool instead. Each hook is a standalone script; install one, some, or
+Tired of Claude not working because it is waiting for you to approve a simple bash command?
+claude-no-bash-detour is for you!
+
+3 Claude Code `PreToolUse` hooks that deny specific Bash command
+patterns in favour of native tools instead. Each hook is a standalone script; install one, some, or
 all of them.
 
 ## Why
 
 Telling Claude in a `CLAUDE.md` file "don't use `find -exec`, use Grep/Glob"
-doesn't reliably stick — instructions are a suggestion, not an enforcement
-mechanism, and a model will still reach for a familiar shell one-liner under
+doesn't work with certainty. .md instructions are merely suggestions and have no enforcement
+mechanism. The model will still reach for a familiar shell one-liner under
 the right prompt. It also means every Bash call built out of one of these
 patterns shows up as a permission prompt for the user to approve, when the
 native tool call wouldn't have needed approval at all.
 
 A `PreToolUse` hook enforces it at the harness level instead: the hook runs
-before the Bash tool call reaches you, denies it if it matches, and hands
-Claude a reason it can act on — so it retries with the right tool rather than
+before the Bash tool call reaches the user, denies it if it matches, and hands
+Claude a reason it can act on so it retries with the right tool rather than
 just getting stuck. Configured once in `settings.json`, it applies to every
 session and every subagent, so you're not approving (or fixing) the same
 pattern repeatedly across parallel agents.
